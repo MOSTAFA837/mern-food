@@ -1,5 +1,5 @@
 /* eslint-disable no-constant-condition */
-import { CircleUserRound, Menu } from "lucide-react";
+import { Menu } from "lucide-react";
 import {
   Sheet,
   SheetContent,
@@ -10,8 +10,11 @@ import {
 import { Separator } from "./ui/separator";
 import { Button } from "./ui/button";
 import MobileNavLinks from "./mobileNavLinks";
+import { useAuth0 } from "@auth0/auth0-react";
 
 const MobileNav = () => {
+  const { user, isAuthenticated, loginWithRedirect } = useAuth0();
+
   return (
     <Sheet>
       <SheetTrigger>
@@ -19,21 +22,26 @@ const MobileNav = () => {
       </SheetTrigger>
       <SheetContent className="space-y-3">
         <SheetTitle>
-          {true ? (
-            <span className="flex items-center font-bold gap-2">
-              <CircleUserRound className="text-rose-500" />
-              mostafa@gmail.com
-            </span>
+          {isAuthenticated ? (
+            <div className="flex gap-2">
+              <img src={user?.picture} alt="" className=" rounded-full w-8" />
+              <span>{user?.nickname}</span>
+            </div>
           ) : (
-            <span> Welcome to MernEats.com!</span>
+            <span> Welcome to U-eat!</span>
           )}
         </SheetTitle>
         <Separator />
         <SheetDescription className="flex flex-col gap-4">
-          {true ? (
+          {isAuthenticated ? (
             <MobileNavLinks />
           ) : (
-            <Button className="flex-1 font-bold bg-rose-500">Log In</Button>
+            <Button
+              onClick={() => loginWithRedirect()}
+              className="flex-1 font-bold bg-rose-500"
+            >
+              Log In
+            </Button>
           )}
         </SheetDescription>
       </SheetContent>
