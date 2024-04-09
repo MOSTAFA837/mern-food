@@ -14,7 +14,7 @@ const MobileNavLinks = () => {
         Order Status
       </Link>
       <Link
-        to="/manage-restaurant"
+        to="/manage-resturant"
         className="flex bg-white items-center font-bold hover:text-rose-500"
       >
         My Restaurant

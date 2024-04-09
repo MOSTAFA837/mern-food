@@ -18,8 +18,8 @@ router.post(
   "/",
   upload.single("imageFile"),
   validateRestaurantRequest,
-  //   jwtCheck,
-  //   jwtParse,
+  jwtCheck,
+  jwtParse,
   createRestaurant
 );
 
