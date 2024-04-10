@@ -4,7 +4,19 @@ import mongoose from "mongoose";
 
 import Restaurant from "../models/resturant";
 
-export const getRestaurantOrders = async (req: Request, res: Response) => {};
+export const getRestaurant = async (req: Request, res: Response) => {
+  try {
+    const restaurant = await Restaurant.findOne({ user: req.userId });
+    if (!restaurant) {
+      return res.status(404).json({ message: "restaurant not found" });
+    }
+
+    res.json(restaurant);
+  } catch (error) {
+    console.log("error", error);
+    res.status(500).json({ message: "Error fetching restaurant" });
+  }
+};
 
 export const createRestaurant = async (req: Request, res: Response) => {
   try {
@@ -27,6 +39,39 @@ export const createRestaurant = async (req: Request, res: Response) => {
     res.status(201).send(restaurant);
   } catch (error) {
     console.log(error);
+    res.status(500).json({ message: "Something went wrong" });
+  }
+};
+
+export const updateRestaurant = async (req: Request, res: Response) => {
+  try {
+    const restaurant = await Restaurant.findOne({
+      user: req.userId,
+    });
+
+    if (!restaurant) {
+      return res.status(404).json({ message: "restaurant not found" });
+    }
+
+    restaurant.restaurantName = req.body.restaurantName;
+    restaurant.city = req.body.city;
+    restaurant.country = req.body.country;
+    restaurant.deliveryPrice = req.body.deliveryPrice;
+    restaurant.estimatedDeliveryTime = req.body.estimatedDeliveryTime;
+    restaurant.cuisines = req.body.cuisines;
+    restaurant.menuItems = req.body.menuItems;
+
+    if (req.file) {
+      await cloudinary.v2.uploader.destroy(restaurant.imageUrl);
+
+      const imageUrl = await uploadImage(req.file as Express.Multer.File);
+      restaurant.imageUrl = imageUrl;
+    }
+
+    await restaurant.save();
+    res.status(200).send(restaurant);
+  } catch (error) {
+    console.log("error", error);
     res.status(500).json({ message: "Something went wrong" });
   }
 };
