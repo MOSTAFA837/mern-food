@@ -1,7 +1,9 @@
 import { useGetRestaurantById } from "@/api/restaurantApi";
+import CheckoutButton from "@/components/CheckoutButton";
 import MenuItem from "@/components/MenuItem";
 import OrderSummary from "@/components/OrderSummary";
 import RestaurantInfo from "@/components/RestaurantInfo";
+import { UserFormData } from "@/components/forms/UserProfileForm";
 import { Card, CardFooter } from "@/components/ui/card";
 import { MenuItemType } from "@/types";
 import { AspectRatio } from "@radix-ui/react-aspect-ratio";
@@ -19,7 +21,10 @@ export default function DetailsPage() {
   const { restaurantId } = useParams();
   const { restaurant, isLoading } = useGetRestaurantById(restaurantId);
 
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [cartItems, setCartItems] = useState<CartItem[]>(() => {
+    const storedCartItems = sessionStorage.getItem(`cartItems-${restaurantId}`);
+    return storedCartItems ? JSON.parse(storedCartItems) : [];
+  });
 
   const addToCart = (menuItem: MenuItemType) => {
     setCartItems((prevCartItems) => {
@@ -72,6 +77,12 @@ export default function DetailsPage() {
     });
   };
 
+  const onCheckout = async (userFormData: UserFormData) => {
+    if (!restaurant) {
+      return;
+    }
+  };
+
   if (isLoading || !restaurant) {
     return "Loading...";
   }
@@ -106,11 +117,11 @@ export default function DetailsPage() {
               removeFromCart={removeFromCart}
             />
             <CardFooter>
-              {/* <CheckoutButton
+              <CheckoutButton
                 disabled={cartItems.length === 0}
                 onCheckout={onCheckout}
-                isLoading={isCheckoutLoading}
-              /> */}
+                isLoading={false}
+              />
             </CardFooter>
           </Card>
         </div>
