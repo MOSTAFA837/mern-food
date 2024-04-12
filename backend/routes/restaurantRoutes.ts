@@ -6,6 +6,7 @@ import {
   getRestaurant,
   updateRestaurant,
   searchRestaurants,
+  getRestautant,
 } from "../controllers/restuantController";
 import { validateRestaurantRequest } from "../middleware/validation";
 import { param } from "express-validator";
@@ -48,6 +49,16 @@ router.get(
     .notEmpty()
     .withMessage("City parameter must be a valid string."),
   searchRestaurants
+);
+
+router.get(
+  "/:restaurantId",
+  param("restaurantId")
+    .isString()
+    .trim()
+    .notEmpty()
+    .withMessage("restautantId parameter must be a valid string."),
+  getRestautant
 );
 
 export default router;
