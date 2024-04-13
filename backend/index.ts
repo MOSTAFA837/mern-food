@@ -6,6 +6,7 @@ import { v2 as cloudinary } from "cloudinary";
 
 import userRoutes from "./routes/userRoutes";
 import restaurantRoutes from "./routes/restaurantRoutes";
+import orderRoutes from "./routes/orderRoutes";
 
 mongoose.connect(process.env.MONGODB_CONNECTION_STRING as string).then(() => {
   console.log("connected to the database");
@@ -24,6 +25,7 @@ app.use(cors());
 
 app.use("/api/user", userRoutes);
 app.use("/api/restaurant", restaurantRoutes);
+app.use("/api/order", orderRoutes);
 
 app.listen(7000, () => {
   console.log("server started on localhost:7000");
